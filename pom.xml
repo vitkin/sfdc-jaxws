@@ -1,18 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.sforce.soap</groupId>
   <artifactId>sfdc-jaxws</artifactId>
+  <packaging>jar</packaging>
+  
+  <name>sfdc-jaxws</name>
 
   <!--
   Set the version to match Salesforce.com Web Services API Version.
   -->
   <version>26.0</version>
+  
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/vitkin/sfdc-jaxws/issues</url>
+  </issueManagement>
 
-  <packaging>jar</packaging>
 
-  <name>sfdc-jaxws</name>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
+  <scm>
+    <connection>scm:git:git://github.com/vitkin/sfdc-jaxws.git</connection>
+    <developerConnection>scm:git:git@github.com:vitkin/sfdc-jaxws.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/vitkin/sfdc-jaxws</url>
+  </scm>
 
   <build>
     <plugins>
@@ -61,6 +81,74 @@
 
   <profiles>
     <profile>
+      <id>enterprise-wsdl</id>
+      <!--
+      Set the type following the WSDL file in "META-INF/wsdl" to 
+      "enterprise-myorganization-generateddate" for the file "enterprise.wsdl"
+      (https://na5.salesforce.com/setup/build/generateEnterpriseWsdl.apexp).
+      -->
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <file>
+          <exists>${basedir}/src/main/resources/META-INF/wsdl/enterprise.wsdl</exists>
+        </file>
+      </activation>
+      <properties>
+        <sfdc.wsdl.type>enterprise-myorganization-YYYY-MM-DD</sfdc.wsdl.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>partner-wsdl</id>
+      <!--
+      Set the type following the WSDL file in "META-INF/wsdl" to 
+      "partner" for the file "partner.wsdl"
+      (https://na5.salesforce.com/soap/wsdl.jsp).
+      -->
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <file>
+          <exists>${basedir}/src/main/resources/META-INF/wsdl/partner.wsdl</exists>
+        </file>
+      </activation>
+      <properties>
+        <sfdc.wsdl.type>partner</sfdc.wsdl.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>apex-wsdl</id>
+      <!--
+      Set the type following the WSDL file in "META-INF/wsdl" to  
+      "apex" for the file "apex.wsdl"
+      (https://na5.salesforce.com/services/wsdl/apex).
+      -->
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <file>
+          <exists>${basedir}/src/main/resources/META-INF/wsdl/apex.wsdl</exists>
+        </file>
+      </activation>
+      <properties>
+        <sfdc.wsdl.type>apex</sfdc.wsdl.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>metadata-wsdl</id>
+      <!--
+      Set the type following the WSDL file in "META-INF/wsdl" to 
+      "metadata" for the file "metadata.wsdl" 
+      (https://na5.salesforce.com/services/wsdl/metadata).
+      -->
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <file>
+          <exists>${basedir}/src/main/resources/META-INF/wsdl/metadata.wsdl</exists>
+        </file>
+      </activation>
+      <properties>
+        <sfdc.wsdl.type>metadata</sfdc.wsdl.type>
+      </properties>
+    </profile>
+    <profile>
       <id>attach-sources</id>
       <build>
         <plugins>
@@ -68,9 +156,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
             <version>2.2.1</version>
-            <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
-            </configuration>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -79,6 +164,9 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -91,9 +179,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.9</version>
-            <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
-            </configuration>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -102,6 +187,9 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -124,18 +212,6 @@
     Set the JDK desired source and target version.
     -->
     <project.jdk.version>1.6</project.jdk.version>
-
-    <!--
-    Set the type following the WSDL file in "META-INF/wsdl" to either:
-      - "enterprise-myorganization-generateddate" for the file "enterprise.wsdl"
-        (https://na5.salesforce.com/setup/build/generateEnterpriseWsdl.apexp).
-      - "partner" for the file "partner.wsdl"
-        (https://na5.salesforce.com/soap/wsdl.jsp).
-      - "apex" for the file "apex.wsdl"
-        (https://na5.salesforce.com/services/wsdl/apex).
-      - "metadata" for the file "metadata.wsdl"
-        (https://na5.salesforce.com/services/wsdl/metadata).
-    -->
-    <sfdc.wsdl.type>partner</sfdc.wsdl.type>
   </properties>
+  
 </project>
