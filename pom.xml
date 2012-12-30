@@ -31,7 +31,7 @@
   <scm>
     <connection>scm:git:git://github.com/vitkin/sfdc-jaxws.git</connection>
     <developerConnection>scm:git:git@github.com:vitkin/sfdc-jaxws.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>partner</tag>
     <url>https://github.com/vitkin/sfdc-jaxws</url>
   </scm>
 
