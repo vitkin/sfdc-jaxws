@@ -65,8 +65,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>${project.jdk.version}</source>
-          <target>${project.jdk.version}</target>
+          <source>1.${project.jdk.version}</source>
+          <target>1.${project.jdk.version}</target>
         </configuration>
       </plugin>
       <plugin>
@@ -74,7 +74,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
+          <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
         </configuration>
       </plugin>
       <plugin>
@@ -192,7 +192,7 @@
               </execution>
             </executions>
             <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
+              <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
             </configuration>
           </plugin>
         </plugins>
@@ -215,7 +215,7 @@
               </execution>
             </executions>
             <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk${project.jdk.version}</classifier>
+              <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
             </configuration>
           </plugin>
         </plugins>
@@ -238,7 +238,7 @@
     <!--
     Set the JDK desired source and target version.
     -->
-    <project.jdk.version>1.6</project.jdk.version>
+    <project.jdk.version>6</project.jdk.version>
     
     <!--
     See https://github.com/github/maven-plugins for details.
