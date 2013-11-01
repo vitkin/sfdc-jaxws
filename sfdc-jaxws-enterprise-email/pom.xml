@@ -3,8 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.sforce.soap</groupId>
-  <artifactId>sfdc-jaxws-metadata</artifactId>
+  <artifactId>sfdc-jaxws-enterprise-email</artifactId>
   <packaging>jar</packaging>
+  
+  <version>29.0-myorganization-YYYY.MM.DD</version>
   
   <parent>
     <groupId>com.sforce.soap</groupId>

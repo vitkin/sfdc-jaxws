@@ -11,7 +11,7 @@
   <!--
   Set the version to match Salesforce.com Web Services API Version.
   -->
-  <version>26.0</version>
+  <version>29.0</version>
   
   <url>http://vitkin.github.com/sfdc-jaxws</url>
   
@@ -90,7 +90,7 @@
         <version>1.5</version>
         <configuration>
           <licenseName>fwsc</licenseName>
-          <inceptionYear>2012</inceptionYear>
+          <inceptionYear>1999</inceptionYear>
           <organizationName>salesforce.com, inc.</organizationName>
           <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
           <roots>
@@ -243,7 +243,10 @@
   <modules>
     <module>sfdc-jaxws-apex</module>
     <module>sfdc-jaxws-metadata</module>
+    <module>sfdc-jaxws-tooling</module>
     <module>sfdc-jaxws-partner</module>
+    <module>sfdc-jaxws-partner-email</module>
     <!--<module>sfdc-jaxws-enterprise</module>-->
+    <!--<module>sfdc-jaxws-enterprise-email</module>-->
   </modules>
 </project>

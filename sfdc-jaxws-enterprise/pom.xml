@@ -6,12 +6,12 @@
   <artifactId>sfdc-jaxws-enterprise</artifactId>
   <packaging>jar</packaging>
   
-  <version>26.0-myorganization-YYYY.MM.DD</version>
+  <version>29.0-myorganization-YYYY.MM.DD</version>
   
   <parent>
     <groupId>com.sforce.soap</groupId>
     <artifactId>sfdc-jaxws</artifactId>
-    <version>26.0</version>
+    <version>29.0</version>
   </parent>
   
   <properties>
