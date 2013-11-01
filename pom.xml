@@ -4,7 +4,7 @@
 
   <groupId>com.sforce.soap</groupId>
   <artifactId>sfdc-jaxws</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   
   <name>sfdc-jaxws</name>
 
@@ -22,9 +22,10 @@
 
   <licenses>
     <license>
-      <name>Apache-2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <name>BSD 3-Clause</name>
+      <url>file:LICENSE.txt</url>
       <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
     </license>
   </licenses>
   
@@ -34,13 +35,94 @@
     <tag>HEAD</tag>
     <url>https://github.com/vitkin/sfdc-jaxws</url>
   </scm>
+  
+  <developers>
+    <!-- see mailing list -->
+  </developers>
+  
+  <mailingLists>
+    <mailingList>
+      <name>Database.com SDK for Java Issues</name>
+      <archive>https://github.com/vitkin/sfdc-jaxws/issues?state=closed</archive>
+      <subscribe>https://github.com/vitkin/sfdc-jaxws/toggle_watch</subscribe>
+      <unsubscribe>https://github.com/vitkin/sfdc-jaxws/toggle_watch</unsubscribe>
+      <post>https://github.com/vitkin/sfdc-jaxws/issues/new</post>
+    </mailingList>
+  </mailingLists>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings
+        only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <versionRange>[1.0,)</versionRange>
+                    <goals>
+                      <!--<goal>java</goal>-->
+                      <goal>exec</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <licenseName>fwsc</licenseName>
+          <inceptionYear>2012</inceptionYear>
+          <organizationName>salesforce.com, inc.</organizationName>
+          <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+          <roots>
+            <root>src</root>
+          </roots>
+          <excludes>
+            <exclude>test/resources/codegeneration/*</exclude>
+            <exclude>**/*.properties</exclude>
+            <exclude>**/*.sql</exclude>
+            <exclude>**/*.xml</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>update-file-header</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>update-project-license</id>
+            <goals>
+              <goal>update-project-license</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jvnet.jax-ws-commons</groupId>
         <artifactId>jaxws-maven-plugin</artifactId>
-        <version>1.12</version>
+        <version>2.3</version>
         <executions>
           <execution>
             <id>wsdl2java</id>
@@ -53,6 +135,7 @@
               <xjcArgs>
                 <xjcArg>-XautoNameResolution</xjcArg>
               </xjcArgs>
+              <xnocompile>true</xnocompile>
               <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
               <wsdlDirectory>src/main/resources/META-INF/wsdl</wsdlDirectory>
               <wsdlLocation>META-INF/wsdl/*</wsdlLocation>
@@ -63,18 +146,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.1</version>
         <configuration>
-          <source>1.${project.jdk.version}</source>
-          <target>1.${project.jdk.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
@@ -90,7 +165,7 @@
       <plugin>
         <groupId>com.github.github</groupId>
         <artifactId>site-maven-plugin</artifactId>
-        <version>0.7</version>
+        <version>0.9</version>
         <configuration>
           <message>Creating site for ${project.version}</message>
         </configuration>
@@ -108,74 +183,6 @@
 
   <profiles>
     <profile>
-      <id>enterprise-wsdl</id>
-      <!--
-      Set the type following the WSDL file in "META-INF/wsdl" to 
-      "enterprise-myorganization-generateddate" for the file "enterprise.wsdl"
-      (https://na5.salesforce.com/setup/build/generateEnterpriseWsdl.apexp).
-      -->
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <file>
-          <exists>${basedir}/src/main/resources/META-INF/wsdl/enterprise.wsdl</exists>
-        </file>
-      </activation>
-      <properties>
-        <sfdc.wsdl.type>enterprise-myorganization-YYYY-MM-DD</sfdc.wsdl.type>
-      </properties>
-    </profile>
-    <profile>
-      <id>partner-wsdl</id>
-      <!--
-      Set the type following the WSDL file in "META-INF/wsdl" to 
-      "partner" for the file "partner.wsdl"
-      (https://na5.salesforce.com/soap/wsdl.jsp).
-      -->
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <file>
-          <exists>${basedir}/src/main/resources/META-INF/wsdl/partner.wsdl</exists>
-        </file>
-      </activation>
-      <properties>
-        <sfdc.wsdl.type>partner</sfdc.wsdl.type>
-      </properties>
-    </profile>
-    <profile>
-      <id>apex-wsdl</id>
-      <!--
-      Set the type following the WSDL file in "META-INF/wsdl" to  
-      "apex" for the file "apex.wsdl"
-      (https://na5.salesforce.com/services/wsdl/apex).
-      -->
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <file>
-          <exists>${basedir}/src/main/resources/META-INF/wsdl/apex.wsdl</exists>
-        </file>
-      </activation>
-      <properties>
-        <sfdc.wsdl.type>apex</sfdc.wsdl.type>
-      </properties>
-    </profile>
-    <profile>
-      <id>metadata-wsdl</id>
-      <!--
-      Set the type following the WSDL file in "META-INF/wsdl" to 
-      "metadata" for the file "metadata.wsdl" 
-      (https://na5.salesforce.com/services/wsdl/metadata).
-      -->
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <file>
-          <exists>${basedir}/src/main/resources/META-INF/wsdl/metadata.wsdl</exists>
-        </file>
-      </activation>
-      <properties>
-        <sfdc.wsdl.type>metadata</sfdc.wsdl.type>
-      </properties>
-    </profile>
-    <profile>
       <id>attach-sources</id>
       <build>
         <plugins>
@@ -191,9 +198,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
-            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -205,7 +209,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
+            <version>2.9.1</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -214,9 +218,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <classifier>${sfdc.wsdl.type}-jdk1${project.jdk.version}</classifier>
-            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -227,23 +228,22 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <!--
-    Set the JDK desired source and target version.
-    -->
-    <project.jdk.version>6</project.jdk.version>
-    
-    <!--
-    See https://github.com/github/maven-plugins for details.
-    -->
+    <license.licenseResolver>file:${project.basedir}/src/license</license.licenseResolver>
+    <!-- See https://github.com/github/maven-plugins for details. -->
     <github.global.server>github</github.global.server>
   </properties>
   
+  <modules>
+    <module>sfdc-jaxws-apex</module>
+    <module>sfdc-jaxws-metadata</module>
+    <module>sfdc-jaxws-partner</module>
+    <!--<module>sfdc-jaxws-enterprise</module>-->
+  </modules>
 </project>
